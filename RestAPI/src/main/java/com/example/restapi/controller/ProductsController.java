@@ -2,9 +2,8 @@ package com.example.restapi.controller;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,51 +12,43 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.restapi.model.Product;
-import com.example.restapi.repository.ProductRepository;
+import com.example.restapi.service.ProductsService;
 
 @RestController
 public class ProductsController {
 	
-	private ProductRepository productRepository;
-	
-	private Logger LOG = LoggerFactory.getLogger(ProductsController.class);
+	private ProductsService productsService;
 	
 	@Autowired
-	public void productRepository (ProductRepository productRepository) {
-		this.productRepository = productRepository;
+	public void productRepository (ProductsService productsService) {
+		this.productsService = productsService;
 	}
 	
-	@GetMapping(path = "/api/products")
+	@GetMapping(path = "/api/products/")
 	public List<Product> getProducts() {
-		return productRepository.findAll();		
+		return productsService.getProducts();		
 	}
 	
 	@GetMapping(path = "/api/products/{id}")
 	public Product getProduct(@PathVariable(name = "id") String id) {
-		return productRepository.findByID(id);		
+		return productsService.getProduct(id);		
 	}
 	
-	@PostMapping(path = "/api/products", consumes = "application/json")
+	@PostMapping(path = "/api/products/", consumes = "application/json")
 	public Product saveProduct(@RequestBody Product productToSave) {
 		
-		return productRepository.save(productToSave);
+		return productsService.saveProduct(productToSave);
 	}
 	
 	@PutMapping(path = "/api/products/{id}", consumes = "application/json")
 	public Product updateProduct(@RequestBody Product productToUpdate, @PathVariable(name = "id") String id) {
+
+		return productsService.updateProduct(productToUpdate, id);
 		
-		Product foundProduct = productRepository.findByID(id);
-		
-		if (foundProduct != null) {
-			foundProduct.setName(productToUpdate.getName());
-			foundProduct.setCategory(productToUpdate.getCategory());
-			foundProduct.setDescription(productToUpdate.getDescription());
-			foundProduct.setType(productToUpdate.getType());
-			return productRepository.save(foundProduct);
-		} else {
-			LOG.info("No products found with given id: " + id);
-			return productToUpdate;
-		}
-		
+	}
+	
+	@DeleteMapping(path = "/api/products/{id}")
+	public void deleteProduct(@PathVariable(name = "id") String id) {
+		productsService.deleteProduct(id);
 	}
 }
