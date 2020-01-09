@@ -7,5 +7,7 @@ import com.example.restapi.model.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, String>{
+	
+	Product findByID(String id);
 
 }

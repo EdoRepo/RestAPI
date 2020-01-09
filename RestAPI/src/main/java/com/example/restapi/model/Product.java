@@ -13,17 +13,17 @@ public class Product {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO, generator = "system-uuid")
 	@GenericGenerator(name = "system-uuid", strategy = "uuid")
-	private String id;
+	private String ID;
 	private String name;
 	private String description;
 	private String type;
 	private String category;
 	
 	public String getId() {
-		return id;
+		return ID;
 	}
 	public void setId(String id) {
-		this.id = id;
+		this.ID = id;
 	}
 	public String getName() {
 		return name;
